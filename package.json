@@ -1,0 +1,21 @@
+{
+  "name": "00-katcleaner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^6.3.1",
+    "csv-parse": "^5.4.0",
+    "csv-parser": "^3.0.0",
+    "exceljs": "^4.3.0",
+    "node-html-parser": "^6.1.5",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1"
+  }
+}

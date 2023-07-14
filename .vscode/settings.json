@@ -17,5 +17,6 @@
   "javascript.updateImportsOnFileMove.enabled": "always",
   "glassit.force_sway": true,
   "glassit.alpha": 255,
-  "glassit.step": 10
+  "glassit.step": 10,
+  "zenMode.hideStatusBar": false
 }

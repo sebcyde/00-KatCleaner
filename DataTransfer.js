@@ -9,24 +9,45 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
   const month = String(currentDate.getUTCMonth() + 1).padStart(2, "0");
   const year = currentDate.getUTCFullYear();
 
-  // Read the HTML file data
   const fileData = await FileDataReader(filePath);
 
   if (fileData) {
     // fileData.forEach((dataObject, i) => {
-    // 	console.log(`CSV Record: ${i + 1}`, dataObject);
-    // 	console.log(' ');
+    //   console.log(`CSV Record: ${i + 1}`, dataObject);
+    //   console.log(" ");
     // });
 
     console.log("Populating Excel Worksheet");
 
     fileData.forEach((dataObject, i) => {
       console.log(`Writing Record: ${i + 1}`);
+      worksheet.getColumn(`A`).width = 60;
+      worksheet.getColumn(`B`).width = 30;
+      worksheet.getColumn(`C`).width = 30;
+      worksheet.getColumn(`D`).width = 30;
+      worksheet.getColumn(`E`).width = 30;
+
       worksheet.getCell(`A${i + 3}`).value = dataObject[0];
       worksheet.getCell(`B${i + 3}`).value = dataObject[4];
       worksheet.getCell(`C${i + 3}`).value = dataObject[5];
       worksheet.getCell(`D${i + 3}`).value = dataObject[6];
       worksheet.getCell(`E${i + 3}`).value = dataObject[7];
+
+      const ResultCell = worksheet.getCell(`E${i + 3}`);
+
+      if (dataObject[7] == "PASSED") {
+        ResultCell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "c1fba4" }, // red color
+        };
+      } else if (dataObject[7] == "FAILED") {
+        ResultCell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "bc4749" }, // red color
+        };
+      }
     });
 
     // Signoff - user signatures etc

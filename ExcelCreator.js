@@ -12,13 +12,13 @@ const ExcelCreator = async (Path, Company, Dir) => {
   console.log("Added Excel Worksheet", `${Company}${Dir}`);
 
   // Save the workbook to the specified output path
-  await workbook.xlsx.writeFile(`${Path}/${Company}${Dir}.xlsk`);
+  await workbook.xlsx.writeFile(`${Path}/${Company}${Dir}.xlsx`);
   console.log(`Workbook saved to: ${Path}/${Company}${Dir}`);
   console.log(" ");
   return {
     Workbook: workbook,
     WorkSheet: worksheet,
-    ExcelPath: `${Path}/${Company}${Dir}.xlsk`,
+    ExcelPath: `${Path}/${Company}${Dir}.xlsx`,
   };
 };
 

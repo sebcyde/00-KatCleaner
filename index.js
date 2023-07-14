@@ -47,6 +47,7 @@ const Main = async () => {
 
   await SubDirectoryCreator(NewCleanDirectory);
 
+  let Count = 0;
   for (const Dir of DirtyDirectories) {
     console.log("Current Directory:", Dir);
     try {
@@ -95,6 +96,7 @@ const Main = async () => {
         );
 
         console.log(" ");
+        Count++;
       } else {
         console.log("Current report doesnt follow specifications - Skipping");
       }
@@ -103,7 +105,8 @@ const Main = async () => {
     }
   }
 
-  console.log("All conversions complete.");
+  console.log(`Conversions complete: ${Count}/${DirtyDirectories.length}`);
+  console.log(" ");
 };
 
 Main();

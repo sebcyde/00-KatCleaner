@@ -14,5 +14,8 @@
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": true,
   "javascript.format.semicolons": "insert",
   "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
-  "javascript.updateImportsOnFileMove.enabled": "always"
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "glassit.force_sway": true,
+  "glassit.alpha": 255,
+  "glassit.step": 10
 }

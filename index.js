@@ -135,7 +135,7 @@ const Main = async () => {
         console.log(" ");
         Res.Total++;
         TestResult ? Res.Passed++ : Res.Failed++;
-        TestResult ? "" : failedTests.push(`Failed Test: ${i + 1} - ${directoryPath}/${Company}`);
+        TestResult ? "" : failedTests.push(`Failed ${Company} Test: - ${directoryPath}/${Company}`);
 
         // Updating log file
         let XPath = ExcelThings.ExcelPath;

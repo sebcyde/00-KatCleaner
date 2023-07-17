@@ -12,10 +12,10 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
   const fileData = await FileDataReader(filePath);
 
   if (fileData) {
-    fileData.forEach((dataObject, i) => {
-      console.log(`CSV Record: ${i + 1}`, dataObject[7]);
-      console.log(" ");
-    });
+    // fileData.forEach((dataObject, i) => {
+    //   console.log(`CSV Record: ${i + 1}`, dataObject[7]);
+    //   console.log(" ");
+    // });
 
     console.log("Populating Excel Worksheet");
 

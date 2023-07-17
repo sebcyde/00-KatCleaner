@@ -82,6 +82,8 @@ const Main = async () => {
     Failed: 0,
     Skipped: 0,
   };
+
+  fs.appendFile(LogPath, `Date of execution: ${formattedDate}\n\n`);
   let failedTests = [];
   let i = 0;
   for (const Dir of DirtyDirectories) {
@@ -139,8 +141,7 @@ const Main = async () => {
 
         // Updating log file
         let XPath = ExcelThings.ExcelPath;
-        fs.appendFile(LogPath, `Date of execution: ${formattedDate}\n\n`);
-        fs.appendFile(LogPath, `${Company} - ${directoryPath}.\n`);
+        fs.appendFile(LogPath, `Report Directory - ${directoryPath}.\n`);
         fs.appendFile(LogPath, `PDF Path - ${PDFPath ? PDFPath : ""}.\n`);
         fs.appendFile(LogPath, `HTML Path - ${HTMLPath ? HTMLPath : ""}.\n`);
         fs.appendFile(LogPath, `Excel Path - ${XPath ? XPath : ""}.\n`);

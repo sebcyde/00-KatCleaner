@@ -12,10 +12,10 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
   const fileData = await FileDataReader(filePath);
 
   if (fileData) {
-    // fileData.forEach((dataObject, i) => {
-    //   console.log(`CSV Record: ${i + 1}`, dataObject);
-    //   console.log(" ");
-    // });
+    fileData.forEach((dataObject, i) => {
+      console.log(`CSV Record: ${i + 1}`, dataObject[7]);
+      console.log(" ");
+    });
 
     console.log("Populating Excel Worksheet");
 
@@ -65,11 +65,15 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
     await workbook.xlsx.writeFile(excelPath);
     console.log("Workbook saved to", excelPath);
 
-    console.log(
-      'fileData.some((test) => test[7] == "FAILED")',
-      fileData.some((test) => test[7] == "FAILED")
-    );
-    return fileData.some((test) => test[7] == "FAILED") ? false : true;
+    let Result = fileData
+      .filter((test) => test[7] != "Status" && test[7] != "")
+      .every((test) => test[7] == "PASSED")
+      ? "PASS"
+      : "FAIL";
+
+    console.log("Result", Result);
+
+    return Result == "PASS" ? true : false;
   } else {
     console.error("Failed to read HTML data");
   }

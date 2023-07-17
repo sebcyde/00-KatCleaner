@@ -47,7 +47,11 @@ const Main = async () => {
 
   await SubDirectoryCreator(NewCleanDirectory);
 
-  let Count = 0;
+  let Res = {
+    Total: 0,
+    Passed: 0,
+    Failed: 0,
+  };
   for (const Dir of DirtyDirectories) {
     console.log("Current Directory:", Dir);
     try {
@@ -88,7 +92,7 @@ const Main = async () => {
         }
 
         const ExcelThings = await ExcelCreator(directoryPath, Company, Dir);
-        await DataTransfer(
+        const TestResult = await DataTransfer(
           FilePath,
           ExcelThings.Workbook,
           ExcelThings.WorkSheet,
@@ -96,7 +100,8 @@ const Main = async () => {
         );
 
         console.log(" ");
-        Count++;
+        Res.Total++;
+        // TestResult ? Res.Failed++ : Res.Passed++;
       } else {
         console.log("Current report doesnt follow specifications - Skipping");
       }
@@ -105,7 +110,10 @@ const Main = async () => {
     }
   }
 
-  console.log(`Conversions complete: ${Count}/${DirtyDirectories.length}`);
+  console.log(`Conversions complete: ${Res.Total}/${DirtyDirectories.length}`);
+  // console.log(`Passed: ${Res.Passed}`);
+  // console.log(`Failed: ${Res.Failed}`);
+
   console.log(" ");
 };
 

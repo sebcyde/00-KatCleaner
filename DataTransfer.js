@@ -64,6 +64,12 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
     // Save the workbook to the specified output path
     await workbook.xlsx.writeFile(excelPath);
     console.log("Workbook saved to", excelPath);
+
+    console.log(
+      'fileData.some((test) => test[7] == "FAILED")',
+      fileData.some((test) => test[7] == "FAILED")
+    );
+    return fileData.some((test) => test[7] == "FAILED") ? false : true;
   } else {
     console.error("Failed to read HTML data");
   }

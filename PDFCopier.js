@@ -5,6 +5,11 @@ const PDFCopier = async (directoryPath) => {
   try {
     const files = await fs.readdir(directoryPath);
 
+    console.log("Files in PDF copier:", files);
+    console.log(" ");
+    console.log(" ");
+    console.log(" ");
+
     for (const file of files) {
       const filePath = path.join(directoryPath, file);
       const fileStats = await fs.stat(filePath);

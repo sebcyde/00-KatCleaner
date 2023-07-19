@@ -6,6 +6,7 @@ const { HTMLCopier } = require("./HTMLCopier");
 const { ExcelCreator } = require("./ExcelCreator");
 const { SubDirectoryCreator } = require("./SubdirectoryCreator");
 const { DataTransfer } = require("./DataTransfer");
+const { GroupFiles } = require("./GroupFiles");
 
 let DirtyDirectory = "C://Users/SebCy/Documents/Documents/Work/Katalon_Dirty";
 let CleanDirectory = "C://Users/SebCy/Documents/Documents/Work/Katalon_Clean";
@@ -34,8 +35,6 @@ const Main = async () => {
     .filter((file) => file.isDirectory())
     .map((file) => file.name)
     .filter((name) => name.toLowerCase() != "self-healing");
-
-  console.log("Dirty Directories:", DirtyDirectories);
 
   console.log("Creating clean container");
   const NewCleanDirectory = `${CleanDirectory}/${formattedDate}`;
@@ -71,10 +70,8 @@ const Main = async () => {
   }
 
   await createLogFile();
-
-  console.log("Pre SDC:", NewCleanDirectory);
-
   await SubDirectoryCreator(NewCleanDirectory);
+  fs.appendFile(LogPath, `Date of execution: ${formattedDate}\n\n`);
 
   let Res = {
     Total: 0,
@@ -83,81 +80,151 @@ const Main = async () => {
     Skipped: 0,
   };
 
-  fs.appendFile(LogPath, `Date of execution: ${formattedDate}\n\n`);
+  console.log("Top Level Directories:", DirtyDirectories);
+  let transferredDirectories = 0;
+  const DirectoriesToClean = [];
   let failedTests = [];
-  let i = 0;
-  for (const Dir of DirtyDirectories) {
-    console.log("Current Directory:", Dir);
-    try {
-      const FileDetails = await FileFisher(`${DirtyDirectory}/${Dir}`);
-      console.log("File Details:", FileDetails);
 
-      const Company = FileDetails.Company;
-      const FilePath = FileDetails.Path;
+  // TODO - FIX FROM HERE
 
-      if (Company) {
-        const PDFPath = await PDFCopier(`${DirtyDirectory}/${Dir}`);
-        const HTMLPath = await HTMLCopier(`${DirtyDirectory}/${Dir}`);
+  // Remove all nested directories that have files in them into DirectoriesToClean
+  const TransferDirectories = async () => {
+    for (const Dir of DirtyDirectories) {
+      console.log("Currently transferring:", Dir);
+      try {
+        // Get files from all directories in each top level directory
+        const AllFileDetails = await FileFisher(`${DirtyDirectory}/${Dir}`);
+        console.log("All File Details:", AllFileDetails.length);
 
-        console.log("Path:", FilePath);
-        console.log("Company:", Company);
-
-        console.log("Current Directory:", Dir);
-        const directoryPath = `${NewCleanDirectory}/${Company}/${Dir}`;
-
-        try {
-          await fs.access(directoryPath);
-          console.log("Directory already exists.");
-        } catch (error) {
-          await fs.mkdir(directoryPath);
-          console.log("Directory created successfully.");
-        }
-
-        if (PDFPath) {
-          const NewPDFPath = `${directoryPath}/${Company}${Dir}.pdf`;
-          console.log("Copying PDF");
-          await fs.copyFile(PDFPath, NewPDFPath);
-        }
-
-        if (HTMLPath) {
-          const NewHTMLPath = `${directoryPath}/${Company}${Dir}.html`;
-          console.log("Copying HTML");
-          await fs.copyFile(HTMLPath, NewHTMLPath);
-        }
-
-        const ExcelThings = await ExcelCreator(directoryPath, Company, Dir);
-        const TestResult = await DataTransfer(
-          FilePath,
-          ExcelThings.Workbook,
-          ExcelThings.WorkSheet,
-          ExcelThings.ExcelPath
-        );
-
-        console.log("Result:", TestResult);
-        console.log(" ");
-        Res.Total++;
-        TestResult ? Res.Passed++ : Res.Failed++;
-        TestResult ? "" : failedTests.push(`Failed ${Company} Test: - ${directoryPath}/${Company}`);
-
-        // Updating log file
-        let XPath = ExcelThings.ExcelPath;
-        fs.appendFile(LogPath, `Report Directory - ${directoryPath}.\n`);
-        fs.appendFile(LogPath, `PDF Path - ${PDFPath ? PDFPath : ""}.\n`);
-        fs.appendFile(LogPath, `HTML Path - ${HTMLPath ? HTMLPath : ""}.\n`);
-        fs.appendFile(LogPath, `Excel Path - ${XPath ? XPath : ""}.\n`);
-        fs.appendFile(LogPath, `Test result: - ${TestResult ? "PASSED" : "FAILED"}.\n\n`);
-
-        i++;
-      } else {
-        console.log("Current report doesnt follow specifications - Skipping");
-        Res.Skipped++;
-        Res.Total++;
+        AllFileDetails.forEach((FileDetails) => {
+          // console.log("FD:", FileDetails);
+          DirectoriesToClean.push(FileDetails);
+        });
+        transferredDirectories++;
+      } catch (error) {
+        console.error("Error transferring directory from top level directory:", error);
       }
-    } catch (error) {
-      console.error("Error processing directory:", error);
     }
-  }
+  };
 
+  await TransferDirectories();
+  const GroupedFiles = await GroupFiles(DirectoriesToClean);
+
+  console.log(" ");
+  console.log("Directories to clean:", DirectoriesToClean.length);
+  console.log("Grouped Files:", GroupedFiles.length);
+
+  GroupedFiles.forEach((Group) => {
+    console.log(Group);
+    console.log(" ");
+  });
+
+  // Clean and convert the transferred directories
+  // DirectoriesToClean.forEach((dir) => {
+  // console.log(dir);
+  // });
+
+  // let i = 0;
+  // DirectoriesToClean.forEach(async (Dir) => {
+  //   // Individual Test Details
+  //   const TestCompany = Dir.Company;
+  //   const CSVFilePath = Dir.Path;
+  //   const FileName = Dir.Name;
+
+  //   // Getting other related  docs
+  //   const ExistingPDFPath = await PDFCopier(`${DirtyDirectory}/${Dir}/${Company}`);
+  //   const ExistingHTMLPath = await HTMLCopier(`${DirtyDirectory}/${Dir}/${Company}`);
+
+  //   // Creating new directory for the created directories to go into
+  //   const NewBaseDirectoryPath = `${NewCleanDirectory}/${Company}/${Dir}`;
+  //   console.log("New directory:", NewBaseDirectoryPath);
+  //   console.log("New Clean Directory: ", NewCleanDirectory);
+  //   console.log(" ");
+
+  //   //
+  //   //
+  //   //
+
+  //   // If new directory already exists, dont recreate it. Put new directories in it
+  //   try {
+  //     await fs.access(NewBaseDirectoryPath);
+  //     console.log("New Base Directory already exists at: ", NewBaseDirectoryPath);
+  //   } catch (error) {
+  //     await fs.mkdir(NewBaseDirectoryPath);
+  //     console.log("New Base directory created successfully at: ", NewBaseDirectoryPath);
+  //   }
+  //   console.log(" ");
+
+  //   // If there is a pdf file to copy over
+  //   if (ExistingPDFPath) {
+  //     console.log("Copying PDF");
+  //     const NewPDFPath = `${NewBaseDirectoryPath}/${Company}${Dir}/${Name}.pdf`;
+  //     try {
+  //       await fs.copyFile(`${ExistingPDFPath}/${Name}`, NewPDFPath);
+
+  //       console.log(" New PDF file copied over successfully");
+  //     } catch (error) {
+  //       console.log("Error copying PDF over:", error);
+  //     }
+  //   }
+
+  //   // If there is a html file to copy over
+  //   if (ExistingHTMLPath) {
+  //     console.log("Copying HTML");
+  //     const NewHTMLPath = `${directoryPath}/${Company}${Dir}/${Name}.html`;
+  //     try {
+  //       await fs.copyFile(`${ExistingHTMLPath}/${Name}`, NewHTMLPath);
+  //       console.log("New HTML file copied successfully");
+  //     } catch (error) {
+  //       console.log("Error copying HTML over:", error);
+  //     }
+  //   }
+  //   console.Log(" ");
+
+  //   //
+  //   //
+
+  //   // New location for other documents in each test suites folder
+  //   console.log(`Creating excel workbook at: ${Dir}/${Name}`);
+  //   const ExcelThings = await ExcelCreator(directoryPath, Company, `${Dir}/${Name}`);
+  //   console.Log(" ");
+
+  //   //
+  //   //
+
+  //   // Transfer data from existing CSV file to the new workbook
+  //   console.log("Copying CSV data to new excel workbook");
+  //   const TestResult = await DataTransfer(
+  //     FilePath,
+  //     ExcelThings.Workbook,
+  //     ExcelThings.WorkSheet,
+  //     ExcelThings.ExcelPath
+  //   );
+
+  //   console.Log(" ");
+
+  //   console.log("Result:", TestResult);
+  //   console.log(" ");
+  //   Res.Total++;
+  //   TestResult ? Res.Passed++ : Res.Failed++;
+  //   TestResult ? "" : failedTests.push(`Failed ${Company} Test: - ${directoryPath}/${Company}`);
+
+  //   // Updating log file
+  //   let XPath = ExcelThings.ExcelPath;
+  //   fs.appendFile(LogPath, `Report Directory - ${directoryPath}.\n`);
+  //   fs.appendFile(LogPath, `PDF Path - ${PDFPath ? PDFPath : ""}.\n`);
+  //   fs.appendFile(LogPath, `HTML Path - ${HTMLPath ? HTMLPath : ""}.\n`);
+  //   fs.appendFile(LogPath, `Excel Path - ${XPath ? XPath : ""}.\n`);
+  //   fs.appendFile(LogPath, `Test result: - ${TestResult ? "PASSED" : "FAILED"}.\n\n`);
+
+  //   i++;
+  //   Res.Total++;
+
+  //   // console.log("Current report doesnt follow specifications - Skipping");
+  //   // Res.Skipped++;
+  // });
+
+  // Log stuff
   console.log(`Conversions complete: ${Res.Total}/${Res.Total}`);
   console.log(`Skipped: ${Res.Skipped}`);
   console.log(`Passed: ${Res.Passed}`);

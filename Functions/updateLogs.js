@@ -11,13 +11,12 @@ const updateLogs = async (Res, LogPath, failedTests) => {
 
   console.log("Updating Logs..");
 
-  fs.promises.appendFile(LogPath, "\n");
-  fs.promises.appendFile(LogPath, `Conversions complete: ${Res.Total}/${Res.Total}\n`);
-  fs.promises.appendFile(LogPath, `Skipped: ${Res.Skipped}\n`);
-  fs.promises.appendFile(LogPath, `Passed: ${Res.Passed}\n`);
-  fs.promises.appendFile(LogPath, `Failed: ${Res.Failed}\n\n`);
-
-  fs.promises.appendFile(LogPath, "Failed Tests:\n");
+  await fs.promises.appendFile(LogPath, "\n");
+  await fs.promises.appendFile(LogPath, `Conversions complete: ${Res.Total}/${Res.Total}\n`);
+  await fs.promises.appendFile(LogPath, `Skipped: ${Res.Skipped}\n`);
+  await fs.promises.appendFile(LogPath, `Passed: ${Res.Passed}\n`);
+  await fs.promises.appendFile(LogPath, `Failed: ${Res.Failed}\n\n`);
+  await fs.promises.appendFile(LogPath, "Failed Tests:\n");
 
   failedTests.forEach((log) => {
     fs.promises.appendFile(LogPath, `${log}\n`);

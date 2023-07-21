@@ -15,6 +15,7 @@ const { PDFCopier } = require("./Functions/PDFCopier");
 const { CSVCopier } = require("./Functions/CSVCopier");
 const { addToLog } = require("./Functions/addToLog");
 const fs = require("fs");
+const { setFilePermissions } = require("./Functions/setLogPermissions");
 
 const WorkConverter = async (DirtyDirectory, CleanDirectory, LogDirectory, formattedDate) => {
   // console.log("Starting work converter");
@@ -99,7 +100,7 @@ const WorkConverter = async (DirtyDirectory, CleanDirectory, LogDirectory, forma
   }
 
   await updateLogs(TestResults, LogPath, failedTests);
-  // console.log("Results:", TestResults);
+  console.log("Results:", TestResults);
 };
 
 module.exports = { WorkConverter };

@@ -5,9 +5,9 @@ const addToLog = async (LogPath, Group, TestResult) => {
   console.log("GROUP: ", Group);
   console.log("Test Result:", TestResult);
 
-  await fs.promises.appendFile(LogPath, `PDF Path: ${Group.PDF}\n\n`);
-  await fs.promises.appendFile(LogPath, `HTML Path: ${Group.HTML}\n\n`);
-  await fs.promises.appendFile(LogPath, `CSV Path: ${Group.CSV}\n\n`);
+  await fs.promises.appendFile(LogPath, `PDF Path: ${Group.PDF}\n`);
+  await fs.promises.appendFile(LogPath, `HTML Path: ${Group.HTML}\n`);
+  await fs.promises.appendFile(LogPath, `CSV Path: ${Group.CSV}\n`);
   await fs.promises.appendFile(LogPath, `Test Section: ${Group.Section}\n`);
   await fs.promises.appendFile(LogPath, `Test Result: ${TestResult ? "PASS" : "FAIL"}\n\n\n`);
 

@@ -69,7 +69,7 @@ const WorkConverter = async (DirtyDirectory, CleanDirectory, LogDirectory, forma
       // Copy over misc files
       await PDFCopier(Group.PDF, Directory);
       await HTMLCopier(Group.HTML, Directory);
-      await CSVCopier(Group.CSV, Directory);
+      // await CSVCopier(Group.CSV, Directory);
 
       // Create excel stuff
       const ExcelData = await createExcel(Directory, FileName);

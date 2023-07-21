@@ -1,9 +1,9 @@
 const fs = require("fs").promises;
 
-const SubDirectoryCreator = async (NewCleanDirectory) => {
+const createSubDirectory = async (NewCleanDirectory) => {
   console.log("SubDirCreator:", NewCleanDirectory);
 
-  const electricDirectory = `${NewCleanDirectory}/Electric`;
+  const electricDirectory = `${NewCleanDirectory}/ElectricShuffle`;
   const redEngineDirectory = `${NewCleanDirectory}/RedEngine`;
   const flightClubDirectory = `${NewCleanDirectory}/FlightClub`;
 
@@ -33,4 +33,4 @@ const SubDirectoryCreator = async (NewCleanDirectory) => {
   console.log(" ");
 };
 
-module.exports = { SubDirectoryCreator };
+module.exports = { createSubDirectory };

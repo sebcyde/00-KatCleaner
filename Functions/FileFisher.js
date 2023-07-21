@@ -1,16 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const GetCompanyName = (Path) => {
-  if (Path.includes("Electric")) {
-    return "Electric";
-  } else if (Path.includes("Red")) {
-    return "RedEngine";
-  } else if (Path.includes("Flight")) {
-    return "FlightClub";
-  }
-};
-
 // ORIGINAL
 // const FileFisher = async (directoryPath) => {
 //   try {

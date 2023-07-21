@@ -1,7 +1,7 @@
 const { FileDataReader } = require("./FileDataReader");
 const userName = "Sebastian Cyde";
 
-const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
+const DataTransfer = async (filePath, section, workbook, worksheet, excelPath) => {
   console.log("Starting data transfer");
 
   const currentDate = new Date();
@@ -21,7 +21,7 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
 
     fileData.forEach((dataObject, i) => {
       console.log(`Writing Record: ${i + 1}`);
-      worksheet.getColumn(`A`).width = 60;
+      worksheet.getColumn(`A`).width = 90;
       worksheet.getColumn(`B`).width = 30;
       worksheet.getColumn(`C`).width = 30;
       worksheet.getColumn(`D`).width = 30;
@@ -56,6 +56,7 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
 
     worksheet.getCell("A1").value = `Signed By: ${userName}`;
     worksheet.getCell("B1").value = `Creation Date: ${day}/${month}/${year}`;
+    worksheet.getCell("C1").value = `Test Section: ${section}`;
 
     console.log(" ");
     console.log("Data transfer complete");
@@ -72,7 +73,6 @@ const DataTransfer = async (filePath, workbook, worksheet, excelPath) => {
       : "FAIL";
 
     console.log("Result", Result);
-
     return Result == "PASS" ? true : false;
   } else {
     console.error("Failed to read HTML data");

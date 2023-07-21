@@ -62,7 +62,8 @@ const WorkConverter = async (DirtyDirectory, CleanDirectory, LogDirectory, forma
       // Create containing directory
       const sectionPath = await createDirectory(`${NewCleanDirectory}/${Company}/${Group.Section}`);
       const datePath = await createDirectory(`${sectionPath}/${FileName}`);
-      const Directory = await createDirectory(`${datePath}/${formattedDate}`);
+      const dayPath = await createDirectory(`${datePath}/${FileName.split("_")[0]}`);
+      const Directory = await createDirectory(`${dayPath}/${formattedDate}`);
       console.log("Created containing directory");
       console.log(" ");
 

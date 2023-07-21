@@ -1,6 +1,7 @@
 const { filterDirtyDirectories } = require("./Functions/filterDirectories");
 const { transferDirectories } = require("./Functions/transferDirectories");
 const { createSubDirectory } = require("./Functions/createSubDirectory");
+const { setFilePermissions } = require("./Functions/setLogPermissions");
 const { createDirectory } = require("./Functions/createDirectory");
 const { checkDirectory } = require("./Functions/checkDirectory");
 const { getTestCompany } = require("./Functions/getTestCompany");
@@ -15,7 +16,6 @@ const { PDFCopier } = require("./Functions/PDFCopier");
 const { CSVCopier } = require("./Functions/CSVCopier");
 const { addToLog } = require("./Functions/addToLog");
 const fs = require("fs");
-const { setFilePermissions } = require("./Functions/setLogPermissions");
 
 const WorkConverter = async (DirtyDirectory, CleanDirectory, LogDirectory, formattedDate) => {
   // console.log("Starting work converter");
